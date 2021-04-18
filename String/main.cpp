@@ -8,15 +8,15 @@ String operator+(const String& left, const String& right);
 
 class String
 {
-	int size;	//Ðàçìåð ñòðîêè â Áàéòàõ
-	char* str;	//Óêàçàòåëü íà ñòðîêó â äèíàìè÷åñêîé ïàìÿòè
+	int size;	// Размер строки в Байтах
+	char* str;	//Указатель на строку динамической памяти 
 public:
 	int get_size()const
 	{
 		return size;
 	}
-	/* v âîçâðàùàåò êîíñòàíòíûé óêàçàòåëü (íåëüçÿ èçìåíèòü çíà÷åíèå ïî àäðåñó)*/
-	const char* get_str()const//Ïîêàçûâàåò ÷òî ýòî êîíñòàíòíûé ìåòîä
+	/* v возвращает константный указатель (нельзя изменить значение по адресу)*/
+	const char* get_str()const//Показывает, что это константный указатель
 	{
 		return str;
 	}
