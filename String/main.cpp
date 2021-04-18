@@ -1,20 +1,22 @@
-#include<iostream>
+ï»¿#include<iostream>
 using namespace std;
+
+#define delimiter "\n---------------------------------------------------------\n"
 
 class String;
 String operator+(const String& left, const String& right);
 
 class String
 {
-	int size;	//Ðàçìåð ñòðîêè â Áàéòàõ
-	char* str;	//Óêàçàòåëü íà ñòðîêó â äèíàìè÷åñêîé ïàìÿòè
+	int size;	//ÃÃ Ã§Ã¬Ã¥Ã° Ã±Ã²Ã°Ã®ÃªÃ¨ Ã¢ ÃÃ Ã©Ã²Ã Ãµ
+	char* str;	//Ã“ÃªÃ Ã§Ã Ã²Ã¥Ã«Ã¼ Ã­Ã  Ã±Ã²Ã°Ã®ÃªÃ³ Ã¢ Ã¤Ã¨Ã­Ã Ã¬Ã¨Ã·Ã¥Ã±ÃªÃ®Ã© Ã¯Ã Ã¬Ã¿Ã²Ã¨
 public:
 	int get_size()const
 	{
 		return size;
 	}
-	/* v âîçâðàùàåò êîíñòàíòíûé óêàçàòåëü (íåëüçÿ èçìåíèòü çíà÷åíèå ïî àäðåñó)*/
-	const char* get_str()const//Ïîêàçûâàåò ÷òî ýòî êîíñòàíòíûé ìåòîä
+	/* v Ã¢Ã®Ã§Ã¢Ã°Ã Ã¹Ã Ã¥Ã² ÃªÃ®Ã­Ã±Ã²Ã Ã­Ã²Ã­Ã»Ã© Ã³ÃªÃ Ã§Ã Ã²Ã¥Ã«Ã¼ (Ã­Ã¥Ã«Ã¼Ã§Ã¿ Ã¨Ã§Ã¬Ã¥Ã­Ã¨Ã²Ã¼ Ã§Ã­Ã Ã·Ã¥Ã­Ã¨Ã¥ Ã¯Ã® Ã Ã¤Ã°Ã¥Ã±Ã³)*/
+	const char* get_str()const//ÃÃ®ÃªÃ Ã§Ã»Ã¢Ã Ã¥Ã² Ã·Ã²Ã® Ã½Ã²Ã® ÃªÃ®Ã­Ã±Ã²Ã Ã­Ã²Ã­Ã»Ã© Ã¬Ã¥Ã²Ã®Ã¤
 	{
 		return str;
 	}
@@ -23,11 +25,11 @@ public:
 		return str;
 	}
 	//			Constructors:
-	String(int size = 80)
+	explicit String(int size = 80)
 	{
 		this->size = size;
 		this->str = new char[size] {};
-		cout << "DefaultConstructor:\t" << this << endl;
+		cout << (size == 80 ? "Default" : "Size") << "Constructor:\t" << this << endl;
 	}
 	String(const char str[])
 	{
@@ -44,6 +46,13 @@ public:
 		for (int i = 0; i < size; i++)
 			this->str[i] = other.str[i];
 		cout << "CopyConstructor:\t" << this << endl;
+	}
+	String(String&& other)
+	{
+		this->size = other.size;
+		this->str = other.str;
+		other.str = nullptr;//Ã“ÃªÃ Ã§Ã Ã²Ã¥Ã«Ã¼ Ã­Ã  Ã­Ã®Ã«Ã¼ (NULL pointer) - Ã³ÃªÃ Ã§Ã Ã²Ã¥Ã«Ã¼ Ã¢ Ã­Ã¨ÃªÃ³Ã¤Ã .
+		cout << "MoveConstructor:\t" << this << endl;
 	}
 	~String()
 	{
@@ -66,12 +75,6 @@ public:
 	String& operator+=(const String& other)
 	{
 		return *this = *this + other;
-		/*char*res = new char[this->size + other.size]{};
-		strcpy(res, this->str);
-		strcpy(res, other.str);
-		delete[] this->str;
-		this->str = res;
-		return *this;*/
 	}
 
 	//			Methods:
@@ -89,12 +92,13 @@ ostream& operator<<(ostream& os, const String& obj)
 
 String operator+(const String& left, const String& right)
 {
-	String result = left.get_size() + right.get_size() - 1;
+	String result(left.get_size() + right.get_size() - 1);	//-1 Ã³Ã¡Ã¨Ã°Ã Ã¥Ã² Ã«Ã¨Ã¸Ã­Ã¨Ã© Ã­Ã®Ã«Ã¼ Ã­Ã  ÃªÃ®Ã­Ã¶Ã¥
 	for (int i = 0; i < left.get_size(); i++)
-		result.get_str()[i] = left.get_str()[i];
+		*(result.get_str() + i) = *(left.get_str() + i);
 	for (int i = 0; i < right.get_size(); i++)
 		result.get_str()[i + left.get_size() - 1] = right.get_str()[i];
 	return result;
+	//		CPU/RAM
 }
 
 //#define CONSTRUCTORS_CHECK
@@ -103,6 +107,7 @@ String operator+(const String& left, const String& right)
 void main()
 {
 	setlocale(LC_ALL, "Russian");
+
 #ifdef CONSTRUCTORS_CHECK
 	String str;		//Default constructor
 	str.print();
@@ -132,10 +137,23 @@ void main()
 
 	String str1 = "Hello";
 	String str2 = "World";
-	String str3 = str1 + str2;//Operator + áóäåò âûïîëíÿòü êîíêàòåíàöèþ (ñëèÿíèå, îáúåäèíåíèå) ñòðîê
+	cout << delimiter << endl;
+	String str3 = str1 + str2;//Operator + Ã¡Ã³Ã¤Ã¥Ã² Ã¢Ã»Ã¯Ã®Ã«Ã­Ã¿Ã²Ã¼ ÃªÃ®Ã­ÃªÃ Ã²Ã¥Ã­Ã Ã¶Ã¨Ã¾ (Ã±Ã«Ã¨Ã¿Ã­Ã¨Ã¥, Ã®Ã¡ÃºÃ¥Ã¤Ã¨Ã­Ã¥Ã­Ã¨Ã¥) Ã±Ã²Ã°Ã®Ãª
+	cout << delimiter << endl;
 	cout << str3 << endl;
-	
-	str1 += str2;
-	cout << str1 << endl;
 
+
+	//cout << delimiter << endl;
+	//str1 += str2;
+	//cout << delimiter << endl;
+	//cout << str1 << endl;
+	//String str3 = str1;//Copy constructor
+	//String str4;
+	//str4 = str2;	//Operator=
+
+	int a = 2;
+	int* pa = &a;
+	int** ppa = &pa;
+	int*** pppa = &ppa;
+	cout << ***pppa << endl;
 }
