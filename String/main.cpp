@@ -51,7 +51,7 @@ public:
 	{
 		this->size = other.size;
 		this->str = other.str;
-		other.str = nullptr;//Óêàçàòåëü íà íîëü (NULL pointer) - óêàçàòåëü â íèêóäà.
+		other.str = nullptr;//Указатель на ноль (NULL pointer) - указатель в никуда.
 		cout << "MoveConstructor:\t" << this << endl;
 	}
 	~String()
@@ -92,7 +92,7 @@ ostream& operator<<(ostream& os, const String& obj)
 
 String operator+(const String& left, const String& right)
 {
-	String result(left.get_size() + right.get_size() - 1);	//-1 óáèðàåò ëèøíèé íîëü íà êîíöå
+	String result(left.get_size() + right.get_size() - 1);	//-1 убирает лишний ноль на конце
 	for (int i = 0; i < left.get_size(); i++)
 		*(result.get_str() + i) = *(left.get_str() + i);
 	for (int i = 0; i < right.get_size(); i++)
@@ -138,7 +138,7 @@ void main()
 	String str1 = "Hello";
 	String str2 = "World";
 	cout << delimiter << endl;
-	String str3 = str1 + str2;//Operator + áóäåò âûïîëíÿòü êîíêàòåíàöèþ (ñëèÿíèå, îáúåäèíåíèå) ñòðîê
+	String str3 = str1 + str2;//Operator + будет выполнять конкатенацию строк (слияние, объединение) строк
 	cout << delimiter << endl;
 	cout << str3 << endl;
 
