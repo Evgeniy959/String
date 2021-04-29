@@ -1,5 +1,8 @@
 ﻿#include<iostream>
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
 
 #define delimiter "\n---------------------------------------------------------\n"
 
@@ -8,15 +11,15 @@ String operator+(const String& left, const String& right);
 
 class String
 {
-	int size;	// Размер строки в Байтах
-	char* str;	//Указатель на строку динамической памяти 
+	int size;	//Размер строки в Байтах
+	char* str;	//Указатель на строку в динамической памяти
 public:
 	int get_size()const
 	{
 		return size;
 	}
 	/* v возвращает константный указатель (нельзя изменить значение по адресу)*/
-	const char* get_str()const//Показывает, что это константный указатель
+	const char* get_str()const//Показывает что это константный метод
 	{
 		return str;
 	}
@@ -25,32 +28,35 @@ public:
 		return str;
 	}
 	//			Constructors:
-	explicit String(int size = 80)
+	explicit String(int size = 80) :size(size), str(new char[size] {})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		//this->size = size;
+		//this->str = new char[size] {};
 		cout << (size == 80 ? "Default" : "Size") << "Constructor:\t" << this << endl;
 	}
-	String(const char str[])
+	String(const char str[]) :
+		String(strlen(str) + 1)
 	{
+		/*
 		this->size = strlen(str) + 1;
-		this->str = new char[size] {};
+		this->str = new char[size] {};	//Это выполнит первый конструктор
+		*/
 		for (int i = 0; str[i]; i++)
 			this->str[i] = str[i];
 		cout << "Constructor:\t\t" << this << endl;
 	}
-	String(const String& other)
+	String(const String& other) :String(other.str)
 	{
-		this->size = other.size;
+		/*this->size = other.size;
 		this->str = new char[size] {};
 		for (int i = 0; i < size; i++)
-			this->str[i] = other.str[i];
+			this->str[i] = other.str[i];*/
 		cout << "CopyConstructor:\t" << this << endl;
 	}
-	String(String&& other)
+	String(String&& other) :size(other.size), str(other.str)//
 	{
-		this->size = other.size;
-		this->str = other.str;
+		/*this->size = other.size;
+		this->str = other.str;*/
 		other.str = nullptr;//Указатель на ноль (NULL pointer) - указатель в никуда.
 		cout << "MoveConstructor:\t" << this << endl;
 	}
@@ -101,8 +107,15 @@ String operator+(const String& left, const String& right)
 	//		CPU/RAM
 }
 
+bool operator==(const String& left, const String& right)
+{
+	return strcmp(left.get_str(), right.get_str());
+}
+
 //#define CONSTRUCTORS_CHECK
 //#define ASSIGNMENT_CHECK
+#define OPERATOR_PLUS_CHECK
+//#define CONSTRUCTORS_CALLING
 
 void main()
 {
@@ -135,13 +148,16 @@ void main()
 	cout << a << endl;
 #endif // ASSIGNMENT_CHECK
 
+#ifdef OPERATOR_PLUS_CHECK
 	String str1 = "Hello";
 	String str2 = "World";
 	cout << delimiter << endl;
-	String str3 = str1 + str2;//Operator + будет выполнять конкатенацию строк (слияние, объединение) строк
+	String str3 = str1 + str2;//Operator + будет выполнять конкатенацию (слияние, объединение) строк
 	cout << delimiter << endl;
 	cout << str3 << endl;
-
+	String str4 = str3;
+	cout << str4 << endl;
+#endif // OPERATOR_PLUS_CHECK
 
 	//cout << delimiter << endl;
 	//str1 += str2;
@@ -151,9 +167,34 @@ void main()
 	//String str4;
 	//str4 = str2;	//Operator=
 
-	int a = 2;
+	/*int a = 2;
 	int* pa = &a;
 	int** ppa = &pa;
 	int*** pppa = &ppa;
-	cout << ***pppa << endl;
+	cout << ***pppa << endl;*/
+
+#ifdef CONSTRUCTORS_CALLING
+	String str;		//Default constructor
+	str.print();
+	String str1(5);
+	str1.print();
+	String str2 = "Hello";	//Single-argument constructor
+	str2.print();
+	String str3("Hello");	//Single-argument constructor
+	str3.print();
+
+	String str4();	//Здесь НЕ вызывается конструктор по умолчанию, 
+					//здесь объявляется функция str4, которая ничего не принмает, 
+					//и возвращает значение типа String.
+	//str4.
+	String str5;	//Неявный вызов конструктора по умолчанию
+	str5.print();
+	String str6{};	//Явный вызов конструтора по умолчанию
+	str6.print();
+
+	String str7(String str);
+	//str7("Hello");
+	String("Привет") == str3;	//Явный вызов конструктора для создания временного безымяного объекта.  
+#endif // CONSTRUCTORS_CALLING
+
 }
