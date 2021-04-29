@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #pragma warning(disable:4326)
 #include<iostream>
 using namespace std;
@@ -9,7 +9,7 @@ using std::endl;
 #define delimiter "\n---------------------------------------------------------\n"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////				CLASS DECLARATION - ОБЪЯВЛЕНИЕ КЛАССА				/////////////////
+//////////////				CLASS DECLARATION - РћР‘РЄРЇР’Р›Р•РќРР• РљР›РђРЎРЎРђ				/////////////////
 
 class String;
 String operator+(const String& left, const String& right);
@@ -19,8 +19,8 @@ bool operator!=(const String& left, const String& right);
 
 class String
 {
-	int size;	//Размер строки в Байтах
-	char* str;	//Указатель на строку в динамической памяти
+	int size;	//Р Р°Р·РјРµСЂ СЃС‚СЂРѕРєРё РІ Р‘Р°Р№С‚Р°С…
+	char* str;	//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° СЃС‚СЂРѕРєСѓ РІ РґРёРЅР°РјРёС‡РµСЃРєРѕР№ РїР°РјСЏС‚Рё
 public:
 	int get_size()const;
 	const char* get_str()const;
