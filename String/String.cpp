@@ -1,14 +1,14 @@
-#include"String.h"
+п»ї#include"String.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////				CLASS DEFINITION - ОПРЕДЕЛЕНИЕ КЛАССА				/////////////////
+//////////////				CLASS DEFINITION - РћРџР Р•Р”Р•Р›Р•РќРР• РљР›РђРЎРЎРђ				/////////////////
 
 int String::get_size()const
 {
 	return size;
 }
-/* v возвращает константный указатель (нельзя изменить значение по адресу)*/
-const char* String::get_str()const//Показывает что это константный метод
+/* v РІРѕР·РІСЂР°С‰Р°РµС‚ РєРѕРЅСЃС‚Р°РЅС‚РЅС‹Р№ СѓРєР°Р·Р°С‚РµР»СЊ (РЅРµР»СЊР·СЏ РёР·РјРµРЅРёС‚СЊ Р·РЅР°С‡РµРЅРёРµ РїРѕ Р°РґСЂРµСЃСѓ)*/
+const char* String::get_str()const//РџРѕРєР°Р·С‹РІР°РµС‚ С‡С‚Рѕ СЌС‚Рѕ РєРѕРЅСЃС‚Р°РЅС‚РЅС‹Р№ РјРµС‚РѕРґ
 {
 	return str;
 }
@@ -27,7 +27,7 @@ String::String(const char str[]) : String(strlen(str) + 1)
 {
 	/*
 	this->size = strlen(str) + 1;
-	this->str = new char[size] {};	//Это выполнит первый конструктор
+	this->str = new char[size] {};	//Р­С‚Рѕ РІС‹РїРѕР»РЅРёС‚ РїРµСЂРІС‹Р№ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
 	*/
 	for (int i = 0; str[i]; i++)
 		this->str[i] = str[i];
@@ -45,7 +45,7 @@ String::String(String&& other) :size(other.size), str(other.str)//
 {
 	/*this->size = other.size;
 	this->str = other.str;*/
-	other.str = nullptr;//Указатель на ноль (NULL pointer) - указатель в никуда.
+	other.str = nullptr;//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРѕР»СЊ (NULL pointer) - СѓРєР°Р·Р°С‚РµР»СЊ РІ РЅРёРєСѓРґР°.
 	cout << "MoveConstructor:\t" << this << endl;
 }
 String::~String()
@@ -85,7 +85,7 @@ ostream& operator<<(ostream& os, const String& obj)
 
 String operator+(const String& left, const String& right)
 {
-	String result(left.get_size() + right.get_size() - 1);	//-1 убирает лишний ноль на конце
+	String result(left.get_size() + right.get_size() - 1);	//-1 СѓР±РёСЂР°РµС‚ Р»РёС€РЅРёР№ РЅРѕР»СЊ РЅР° РєРѕРЅС†Рµ
 	for (int i = 0; i < left.get_size(); i++)
 		*(result.get_str() + i) = *(left.get_str() + i);
 	for (int i = 0; i < right.get_size(); i++)
