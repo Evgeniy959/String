@@ -1,10 +1,3 @@
-/*Реадизовать класс , описывающий матрицу,
-и обеспечивающий все операции над матрицами :
--determinant()
-- operator+
--operator-
--operator* */
-
 #include<iostream>
 using namespace std;
 using std::cin;
@@ -34,8 +27,16 @@ public:
 	}
 	void set_M(int i, int j, int value)
 	{
+		/*if ((i < 0) || (i >= m))
+			return;
+		if ((j < 0) || (j >= n))
+			return;*/
 		M[i][j] = value;
 	}
+	/*void set_M(int M)
+	{
+		this->M = *M;
+	}*/
 	void set_m(int M)
 	{
 		this->m = m;
@@ -58,36 +59,40 @@ public:
 	{
 		this->m = m;
 		this->n = n;
-		//1 Создаем массив указателей:
-			M = new int*[m];
-		//2 Выделяем память под строки двумерного массива:
+		/*M = (int**) new int*[m]; // количество строк, количество указателей
+
+		for (int i = 0; i < m; i++)
+			M[i] = (int*) new int[n];*/
+			//1 Создаем массив указателей
+		M = new int*[m];
+		//2 Выделяем память под строки двумерного массива
 		for (int i = 0; i < m; i++)
 			M[i] = new int[n] {};
-		// Заполняем массив нулями:
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
 				M[i][j] = 0;
 		cout << "Constructor2:\t" << this << endl;
 	}
-	void Rand() 
-	{ 
+	void Rand()
+	{
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
-				M[i][j] = rand()%100;
+				M[i][j] = rand() % 100;
 	}
-	void print() 
+	void print()
 	{
+		//cout << "Object: " << Obj << endl;
 		for (int i = 0; i < m; i++)
 		{
 			for (int j = 0; j < n; j++)
 			{
-				cout << M [i][j] << "\t";
+				cout << M[i][j] << "\t";
 			}
 			cout << endl;
-		}  
+		}
 	}
 
-	Matrix(const Matrix& right )
+	Matrix(const Matrix& right)
 	{
 		m = right.m;
 		n = right.n;
@@ -102,10 +107,10 @@ public:
 			{
 				M[i][j] = right.M[i][j];
 			}
-		} 
+		}
 		cout << "CopyConstructor:\t" << this << endl;
 	}
-	 
+
 	// операторы:
 
 	Matrix operator=(const Matrix& right)
@@ -133,53 +138,6 @@ public:
 		cout << "CopyAssignment:\t\t" << this << endl;
 		return *this;
 	}
-	Matrix operator+(const Matrix& right)
-	{
-		Matrix result(m, n);
-		for (int i = 0; i < m; i++)
-		{
-			for (int j = 0; j < n; j++)
-			{
-				result.M[i][j] = M[i][j] + right.M[i][j];
-			}
-		}
-		return result;
-	}
-	Matrix operator-(const Matrix& right)
-	{
-		Matrix result(m, n);
-		for (int i = 0; i < m; i++)
-		{
-			for (int j = 0; j < n; j++)
-			{
-				result.M[i][j] = M[i][j] - right.M[i][j];
-			}
-		}
-		return result;
-	}
-	Matrix operator+=(const Matrix& right)
-	{
-		return *this = *this + right;
-	}
-	Matrix operator-=(const Matrix& right)
-	{
-		return *this = *this - right;
-	}
-	Matrix operator*(const Matrix& right)
-	{
-		//Matrix M[m][n]{};
-		Matrix result(m, n);
-		for (int i = 0; i < m; i++)
-		{
-			for (int j = 0; j < n; j++)
-			{
-				for (int k = 0; k < n; k++)
-					result.M[i][j] += M[i][k] * M[k][j];
-			}
-		}
-		return result;
-	}
-	
 	~Matrix()
 	{
 		delete[]M;
@@ -193,10 +151,42 @@ public:
 
 		if (m > 0)
 			delete[] M;
-		cout << "Destructor:\t\t" << this << endl;*/ 
+		cout << "Destructor:\t\t" << this << endl;*/
 	}
 
 };
+
+Matrix operator+(const Matrix& left, const Matrix& right)
+{
+	int m1 = left.get_m();
+	int n1 = left.get_n();
+	Matrix result (m1, n1);
+	for (int i = 0; i < m1; i++)
+	{
+		for (int j = 0; j < n1; j++)
+		{
+			result.set_M[i][j] = left.get_M[i][j]() + right.get_M[i][j]();
+		}
+		cout << endl;
+	}
+	return result;
+}
+/*ostream& operator<<(ostream& os, const Matrix& obj)
+{
+	int m, int n;
+
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				os << obj.get_M[i][j] << "\t";
+				//os << obj[i][j] << "\t";
+			}
+			cout << endl;
+		}
+
+	//return os << obj.get_M();
+}*/
 
 void main()
 {
@@ -205,6 +195,7 @@ void main()
 	cout << "Введите размер матрицы (количество строк и столбцов):" << endl;
 	cin >> x >> y;
 	Matrix M(x, y);
+	//cout << M << endl;
 	M.Rand();
 	M.print();
 	Matrix M1(x, y);
@@ -214,18 +205,6 @@ void main()
 	cout << delimiter << endl;
 	M3 = M + M1;
 	cout << delimiter << endl;
+	//cout << "M3" << endl;
 	M3.print();
-	cout << delimiter << endl;
-	M3 = M - M1;
-	cout << delimiter << endl;
-	M3.print();
-	M += M1;
-	M.print();
-	M -= M1;
-	M.print();
-	cout << delimiter << endl;
-	M3 = M * M1;
-	cout << delimiter << endl;
-	M3.print();
-
 }
