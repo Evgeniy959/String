@@ -31,13 +31,13 @@ public:
 			return;
 		if ((j < 0) || (j >= n))
 			return;*/
-		M[i][j] = value;
+		this->M[i][j] = value;
 	}
 	/*void set_M(int M)
 	{
 		this->M = *M;
 	}*/
-	void set_m(int M)
+	void set_m(int m)
 	{
 		this->m = m;
 	}
@@ -160,12 +160,12 @@ Matrix operator+(const Matrix& left, const Matrix& right)
 {
 	int m1 = left.get_m();
 	int n1 = left.get_n();
-	Matrix result (m1, n1);
+	Matrix result(m1, n1);
 	for (int i = 0; i < m1; i++)
 	{
 		for (int j = 0; j < n1; j++)
 		{
-			result.set_M[i][j] = left.get_M[i][j]() + right.get_M[i][j]();
+			result.set_M = left.get_M() + right.get_M();
 		}
 		cout << endl;
 	}

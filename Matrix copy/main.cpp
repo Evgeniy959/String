@@ -34,7 +34,7 @@ public:
 	}
 	void set_M(int i, int j, int value)
 	{
-		M[i][j] = value;
+		this->M[i][j] = value;
 	}
 	void set_m(int m)
 	{

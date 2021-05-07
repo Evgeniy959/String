@@ -13,13 +13,17 @@ using std::endl;
 
 #define delimiter "\n---------------------------------------------------------\n"
 #define tab "\t"
+// шаблонный класс Матрица
+template <typename T>
 
 class Matrix
 {
-	int** M;
+	T** M;
 	int m; //Количество строк
 	int n; //Количество элементов строки
 public:
+
+	//                    Неиспользуемые методы (get_methods, set_methods):
 	int get_M()const
 	{
 		return **M;
@@ -34,7 +38,7 @@ public:
 	}
 	void set_M(int i, int j, int value)
 	{
-		M[i][j] = value;
+		this->M[i][j] = value;
 	}
 	void set_m(int m)
 	{
@@ -44,8 +48,8 @@ public:
 	{
 		this->n = n;
 	}
-
-	//           Consctructors:
+	
+	//                     Consctructors:
 	Matrix()
 	{
 		m = n = 0;
@@ -58,41 +62,25 @@ public:
 		this->m = m;
 		this->n = n;
 		//1 Создаем массив указателей:
-			M = new int*[m];
+			M = new T*[m];
 		//2 Выделяем память под строки двумерного массива:
 		for (int i = 0; i < m; i++)
-			M[i] = new int[n] {};
+			M[i] = new T[n] {};
 		// Заполняем массив нулями:
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
 				M[i][j] = 0;
 		cout << "Constructor2:\t" << this << endl;
 	}
-	void Rand() 
-	{ 
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-				M[i][j] = rand()%10;
-	}
-	void print() 
-	{
-		for (int i = 0; i < m; i++)
-		{
-			for (int j = 0; j < n; j++)
-			{
-				cout << M [i][j] << "\t";
-			}
-			cout << endl;
-		}  
-	}
+	
 	Matrix(const Matrix& right )
 	{
 		m = right.m;
 		n = right.n;
-		M = new int*[m];
+		M = new T*[m];
 		for (int i = 0; i < m; i++)
 		{
-			M[i] = new int[n] {};
+			M[i] = new T[n] {};
 		}
 		for (int i = 0; i < m; i++)
 		{
@@ -112,17 +100,17 @@ public:
 		cout << "MoveConstructor:\t" << this << endl;
 	}
 	 
-	// Операторы:
+	//                      Операторы:
 
 	Matrix operator=(const Matrix& right)
 	{
 		delete[] this->M;
 		m = right.m;
 		n = right.n;
-		M = new int*[m];
+		M = new T*[m];
 		for (int i = 0; i < m; i++)
 		{
-			M[i] = new int[n] {};
+			M[i] = new T[n] {};
 		}
 		for (int i = 0; i < m; i++)
 		{
@@ -196,7 +184,24 @@ public:
 		delete[]M;
 		cout << "Destructor:\t\t" << this << endl;
 	}
-                   //Methods:
+     //                        Methods:
+	void Rand()
+	{
+		for (int i = 0; i < m; i++)
+			for (int j = 0; j < n; j++)
+				M[i][j] = rand() % 10;
+	}
+	void print()
+	{
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				cout << M[i][j] << "\t";
+			}
+			cout << endl;
+		}
+	}
 
 	void determinant() 
 	{
@@ -280,7 +285,7 @@ public:
 	}
 	
 };
-ostream& operator<<(ostream& os, Matrix& obj)
+ostream& operator<<(ostream& os, Matrix<int>& obj)
 {
 	obj.print();
 	return os;
@@ -292,13 +297,13 @@ void main()
 	int m, n;
 	cout << "Введите размер матрицы (количество строк и столбцов):" << endl;
 	cin >> m >> n;
-	Matrix M(m, n);
+	Matrix<int> M(m, n);
 	M.Rand();
 	M.print();
-	Matrix M1(m, n);
+	Matrix<int> M1(m, n);
 	M1.Rand();
 	M1.print();
-	Matrix M3;
+	Matrix<int> M3;
 	cout << delimiter << endl;
 	M3 = M + M1;
 	cout << delimiter << endl;
