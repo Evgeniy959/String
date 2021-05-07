@@ -1,5 +1,5 @@
-п»ї/*Р РµР°РґРёР·РѕРІР°С‚СЊ РєР»Р°СЃСЃ , РѕРїРёСЃС‹РІР°СЋС‰РёР№ РјР°С‚СЂРёС†Сѓ,
-Рё РѕР±РµСЃРїРµС‡РёРІР°СЋС‰РёР№ РІСЃРµ РѕРїРµСЂР°С†РёРё РЅР°Рґ РјР°С‚СЂРёС†Р°РјРё :
+/*Реадизовать класс , описывающий матрицу,
+и обеспечивающий все операции над матрицами :
 -determinant()
 - operator+
 -operator-
@@ -17,8 +17,8 @@ using std::endl;
 class Matrix
 {
 	int** M;
-	int m; //РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє
-	int n; //РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ СЃС‚СЂРѕРєРё
+	int m; //Количество строк
+	int n; //Количество элементов строки
 public:
 	int get_M()const
 	{
@@ -53,39 +53,52 @@ public:
 
 		cout << "Constructor0:\t" << this << endl;
 	}
+
 	Matrix(int m, int n)
 	{
 		this->m = m;
 		this->n = n;
-		//1 РЎРѕР·РґР°РµРј РјР°СЃСЃРёРІ СѓРєР°Р·Р°С‚РµР»РµР№:
-			M = new int*[m];
-		//2 Р’С‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ СЃС‚СЂРѕРєРё РґРІСѓРјРµСЂРЅРѕРіРѕ РјР°СЃСЃРёРІР°:
+		//1 Создаем массив указателей:
+		M = new int*[m];
+		//2 Выделяем память под строки двумерного массива:
 		for (int i = 0; i < m; i++)
 			M[i] = new int[n] {};
-		// Р—Р°РїРѕР»РЅСЏРµРј РјР°СЃСЃРёРІ РЅСѓР»СЏРјРё:
+		// Заполняем массив нулями:
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
 				M[i][j] = 0;
 		cout << "Constructor2:\t" << this << endl;
 	}
-	void Rand() 
-	{ 
+	void Rand()
+	{
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
-				M[i][j] = rand()%10;
+				M[i][j] = rand() % 10;
 	}
-	void print() 
+	void print()
 	{
 		for (int i = 0; i < m; i++)
 		{
 			for (int j = 0; j < n; j++)
 			{
-				cout << M [i][j] << "\t";
+				cout << M[i][j] << "\t";
 			}
 			cout << endl;
-		}  
+		}
 	}
-	Matrix(const Matrix& right )
+	/*void print1()
+	{
+		for (int i = 0; i < m; i++)
+		{
+			for (int j = 0; j < n * 2; j++)
+			{
+				cout << M[i][j] << "\t";
+			}
+			cout << endl;
+		}
+	}*/
+
+	Matrix(const Matrix& right)
 	{
 		m = right.m;
 		n = right.n;
@@ -100,7 +113,7 @@ public:
 			{
 				M[i][j] = right.M[i][j];
 			}
-		} 
+		}
 		cout << "CopyConstructor:\t" << this << endl;
 	}
 	Matrix(Matrix&& right)
@@ -108,14 +121,19 @@ public:
 		this->M = right.M;
 		this->m = right.m;
 		this->n = right.m;
-		right.M = nullptr;//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРѕР»СЊ (NULL pointer) - СѓРєР°Р·Р°С‚РµР»СЊ РІ РЅРёРєСѓРґР°.
+		right.M = nullptr;//Указатель на ноль (NULL pointer) - указатель в никуда.
 		cout << "MoveConstructor:\t" << this << endl;
 	}
-	 
-	// РћРїРµСЂР°С‚РѕСЂС‹:
+
+	// операторы:
 
 	Matrix operator=(const Matrix& right)
 	{
+		/*if (m != right.m || n != right.n)
+		{
+			cout << "Массивы разного размера!\n";
+			return *this;
+		}*/
 		delete[] this->M;
 		m = right.m;
 		n = right.n;
@@ -138,6 +156,8 @@ public:
 	{
 		if (this == &right)return *this;
 		delete[] this->M;
+		//m = right.m;
+		//n = right.n;
 		this->M = right.M;
 		this->m = right.m;
 		this->n = right.n;
@@ -179,7 +199,7 @@ public:
 	}
 	Matrix operator*(const Matrix& right)
 	{
-	    Matrix result(m, n);
+		Matrix result(m, n);
 		for (int i = 0; i < m; i++)
 		{
 			for (int j = 0; j < n; j++)
@@ -190,15 +210,25 @@ public:
 		}
 		return result;
 	}
-	
+
 	~Matrix()
 	{
 		delete[]M;
 		cout << "Destructor:\t\t" << this << endl;
-	}
-                   //Methods:
+		/*if (n > 0)
+		{
+			// освободить выделенную память для каждой строки
+			for (int i = 0; i < m; i++)
+				delete[] M[i];
+		}
 
-	void determinant() 
+		if (m > 0)
+			delete[] M;
+		cout << "Destructor:\t\t" << this << endl;*/
+	}
+	//Methods:
+
+	void determinant()
 	{
 
 		Matrix result(m, n * 2);
@@ -218,7 +248,7 @@ public:
 			}
 			cout << endl;
 		}
-		
+
 		if (m == 3 && n == 3)
 		{
 			int determinant = 0;
@@ -236,9 +266,9 @@ public:
 				sum_main_diag += product_main;
 				sum_aux_diag += product_aux;
 			}
-			cout << "РЎСѓРјРјР° РїСЂРѕРёР·РІРµРґРµРЅРёР№ СЌР»РµРјРµРЅС‚РѕРІ РіР»Р°РІРЅРѕР№ РґРёР°РіРѕРЅР°Р»Рё: " << sum_main_diag << endl;
-			cout << "РЎСѓРјРјР° РїСЂРѕРёР·РІРµРґРµРЅРёР№ СЌР»РµРјРµРЅС‚РѕРІ РІС‚РѕСЂРѕСЃС‚РµРїРµРЅРЅРѕР№ РґРёР°РіРѕРЅР°Р»Рё: " << sum_aux_diag << endl;
-			cout << "РћРїСЂРµРґРµР»РёС‚РµР»СЊ: " << (determinant = sum_main_diag - sum_aux_diag) << endl;
+			cout << "Сумма произведений элементов главной диагонали: " << sum_main_diag << endl;
+			cout << "Сумма произведений элементов второстепенной диагонали: " << sum_aux_diag << endl;
+			cout << "Определитель: " << (determinant = sum_main_diag - sum_aux_diag) << endl;
 		}
 		else if (m == 4 && n == 4)
 		{
@@ -253,11 +283,31 @@ public:
 				}
 				sum_main_diag += product_main;
 			}
-			cout << "РЎСѓРјРјР° РїСЂРѕРёР·РІРµРґРµРЅРёР№ СЌР»РµРјРµРЅС‚РѕРІ РіР»Р°РІРЅРѕР№ РґРёР°РіРѕРЅР°Р»Рё: " << sum_main_diag << endl;
-			cout << "РћРїСЂРµРґРµР»РёС‚РµР»СЊ: " << (determinant = -sum_main_diag) << endl;
+			cout << "Сумма произведений элементов главной диагонали: " << sum_main_diag << endl;
+			cout << "Определитель: " << (determinant = -sum_main_diag) << endl;
 		}
 		else if (m == 2 && n == 2)
+			/*Matrix result(m, n);
+			for (int i = 0; i < m; i++)
+			{
+				for (int j = 0; j < n; j++)
+				{
+					cout << result.M[i][j] << "\t";
+				}
+				cout << endl;
+			}*/
 		{
+			/*Matrix result(m, n);
+			result.Rand();
+			//result.print();
+			for (int i = 0; i < m; i++)
+			{
+				for (int j = 0; j < n; j++)
+				{
+					cout << result.M[i][j] << "\t";
+				}
+				cout << endl;
+			}*/
 			int determinant = 0;
 			int diag_1 = 0;
 			int diag_2 = 0;
@@ -267,35 +317,51 @@ public:
 				int product_2 = 1;
 				for (int j = 0; j < n; j++)
 				{
-					product_1 *= result.M[1-j][j + i];
+					product_1 *= result.M[1 - j][j + i];
 					product_2 *= result.M[j][j + i];
 				}
 				diag_1 = product_1;
 				diag_2 = product_2;
 			}
-			cout << "РџСЂРѕРёР·РІРµРґРµРЅРёРµ РїРµСЂРІРѕР№ РґРёР°РіРѕРЅР°Р»Рё: " << diag_1 << endl;
-			cout << "РџСЂРѕРёР·РІРµРґРµРЅРёРµ РІС‚РѕСЂРѕР№ РґРёР°РіРѕРЅР°Р»Рё: " << diag_2 << endl;
-			cout << "РћРїСЂРµРґРµР»РёС‚РµР»СЊ: " << (determinant = diag_1 - diag_2) << endl;
-		}	
+			cout << "Произведение первой диагонали: " << diag_1 << endl;
+			cout << "Произведение второй диагонали: " << diag_2 << endl;
+			cout << "Определитель: " << (determinant = diag_1 - diag_2) << endl;
+		}
 	}
-	
+	//friend ostream& operator<<(ostream& os, const Matrix& obj);
 };
 ostream& operator<<(ostream& os, Matrix& obj)
 {
 	obj.print();
 	return os;
 }
+/*ostream& operator<<(ostream& os, Matrix& obj)
+{
+	int m1 = obj.get_m();
+	int n1 = obj.get_n();
+	for (int i = 0; i < m1; i++)
+	{
+		for (int j = 0; j < n1; j++)
+		{
+			//os << M[i][j] << "\t";
+			os << obj.get_M() << "\t";
+			//os << obj[i][j] << "\t";
+		}
+		cout << endl;
+	}
+	return os;
+}*/
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	int m, n;
-	cout << "Р’РІРµРґРёС‚Рµ СЂР°Р·РјРµСЂ РјР°С‚СЂРёС†С‹ (РєРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє Рё СЃС‚РѕР»Р±С†РѕРІ):" << endl;
-	cin >> m >> n;
-	Matrix M(m, n);
+	int x, y;
+	cout << "Введите размер матрицы (количество строк и столбцов):" << endl;
+	cin >> x >> y;
+	Matrix M(x, y);
 	M.Rand();
 	M.print();
-	Matrix M1(m, n);
+	Matrix M1(x, y);
 	M1.Rand();
 	M1.print();
 	Matrix M3;
@@ -307,17 +373,17 @@ void main()
 	M3 = M - M1;
 	cout << delimiter << endl;
 	M3.print();
-	cout << delimiter << endl;
 	M += M1;
-	cout << delimiter << endl;
 	M.print();
-	cout << delimiter << endl;
 	M -= M1;
-	cout << delimiter << endl;
 	M.print();
 	cout << delimiter << endl;
 	M3 = M * M1;
 	cout << delimiter << endl;
+	//M3.print();
 	cout << M3 << endl;
 	M.determinant();
+	//M{ 2, 3, 4, 1 };
+	//M.Rand();
+	//cout << M << endl;
 }
